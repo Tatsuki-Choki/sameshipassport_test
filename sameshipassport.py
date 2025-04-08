@@ -174,6 +174,8 @@ st.markdown(f"""
         font-family: 'Noto Sans JP', sans-serif;
         padding: 0;
         max-width: 100%;
+        overflow-x: hidden; /* 横スクロールを禁止 */
+        box-sizing: border-box; /* padding/borderを幅に含める */
     }}
     
     /* ヘッダー部分: 赤茶色系 */
@@ -183,9 +185,11 @@ st.markdown(f"""
         padding: 30px 20px;
         text-align: center;
         border-radius: 0;
-        margin-top: -80px;
-        margin-left: -80px;
-        margin-right: -80px;
+        margin-top: -80px; /* 上方向のマージンは維持 */
+        /* margin-left: -80px; */ /* 削除 */
+        /* margin-right: -80px; */ /* 削除 */
+        width: 100%; /* 幅を100%に */
+        box-sizing: border-box; /* paddingを含めて幅計算 */
         position: relative;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }}
@@ -346,6 +350,11 @@ st.markdown(f"""
     /* Made with Streamlitのフッター非表示 */
     footer {{
         visibility: hidden;
+    }}
+    
+    /* 追加: bodyにもoverflow-xを設定 */
+    body {{
+        overflow-x: hidden;
     }}
 </style>
 """, unsafe_allow_html=True)
