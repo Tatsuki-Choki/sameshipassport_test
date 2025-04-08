@@ -340,6 +340,7 @@ st.markdown(f"""
         height: 400px;
         opacity: 0.05;
         z-index: 0;
+        pointer-events: none;
     }}
     
     /* Made with Streamlitのフッター非表示 */
