@@ -356,6 +356,25 @@ st.markdown(f"""
     body {{
         overflow-x: hidden;
     }}
+
+    /* --- レスポンシブ対応 --- */
+    @media (max-width: 600px) {{
+        .passport-title {{
+            font-size: 32px; /* 小さい画面用のフォントサイズ */
+            letter-spacing: 1px; /* 文字間隔も少し詰める */
+        }}
+        .passport-en-title {{
+            font-size: 16px; /* 英語タイトルも調整 */
+        }}
+        .passport-header {{
+            padding: 20px 15px; /* ヘッダーのパディングも調整 */
+            margin-top: -60px; /* 上マージン調整 */
+        }}
+         .centered-icon img {{ /* ロゴサイズも調整 */
+            width: 150px;
+            height: 150px;
+        }}
+    }}
 </style>
 """, unsafe_allow_html=True)
 
