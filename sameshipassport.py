@@ -94,7 +94,8 @@ def find_nearby_good_food(lat, lng, radius=200):
                 photo_ref = None
                 if "photos" in place and place["photos"]:
                     photo_ref = place["photos"][0]["photo_reference"]
-                photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={os.getenv('GOOGLE_API_KEY')}" if photo_ref else None
+                # photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={os.getenv('GOOGLE_API_KEY')}" if photo_ref else None
+                photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={st.secrets['env']['GOOGLE_API_KEY']}" if photo_ref else None
 
                 found_places.append({
                     "name": name,
@@ -167,14 +168,22 @@ stamp_base64 = logo_base64
 
 st.markdown(f"""
 <style>
-    /* 全体のベースカラーをダーク系 */
-    .main {{
+    /* 全体のベースカラーをbodyに適用 */
+    body {{
         background-color: #1e1e2d;
         color: #e8d0a9;
         font-family: 'Noto Sans JP', sans-serif;
+        overflow-x: hidden; /* 横スクロールを禁止 */
+    }}
+
+    /* .mainからは色とフォント指定を削除 */
+    .main {{
+        /* background-color: #1e1e2d; */
+        /* color: #e8d0a9; */
+        /* font-family: 'Noto Sans JP', sans-serif; */
         padding: 0;
         max-width: 100%;
-        overflow-x: hidden; /* 横スクロールを禁止 */
+        /* overflow-x: hidden; */ /* bodyに移動 */
         box-sizing: border-box; /* padding/borderを幅に含める */
     }}
     
@@ -351,10 +360,15 @@ st.markdown(f"""
     footer {{
         visibility: hidden;
     }}
-    
-    /* 追加: bodyにもoverflow-xを設定 */
-    body {{
-        overflow-x: hidden;
+
+    .centered-icon img {{ /* ロゴサイズも調整 */
+        width: 150px;
+        height: 150px;
+    }}
+    h2 {{ /* h2見出しの調整 */
+        font-size: 24px; /* 少し小さくする */
+        word-break: keep-all; /* 単語の途中での改行を防ぐ */
+        line-height: 1.4; /* 行間も少し調整 */
     }}
 
     /* --- レスポンシブ対応 --- */
