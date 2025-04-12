@@ -168,9 +168,10 @@ stamp_base64 = logo_base64
 
 st.markdown(f"""
 <style>
-    /* 全体のベースカラーをbodyに適用 */
-    body {{
-        background-color: #1e1e2d;
+    /* 全体のベースカラーをbodyおよびコンテナに適用 */
+    body, .reportview-container, .stApp, .main {{
+        background-image: url("https://s.mj.run/qmlyfG-PEwY");
+        background-repeat: repeat;
         color: #e8d0a9;
         font-family: 'Noto Sans JP', sans-serif;
         overflow-x: hidden; /* 横スクロールを禁止 */
