@@ -155,25 +155,27 @@ def get_photo_base64(photo_url):
 
 # ------------------ Streamlit UI ------------------
 # ロゴ（同フォルダ内の画像をbase64化）
-with open("sameshi_logo.png", "rb") as f:
+with open("sameshi_logo02.png", "rb") as f:
     logo_data = f.read()
 logo_base64 = base64.b64encode(logo_data).decode()
 
 # メインロゴHTML
-# ↑従来のサイズ(width=150, height=150) → 1.3倍 (≈195×195)
-logo_html = f'<img src="data:image/png;base64,{logo_base64}" width="195" height="195" alt="サ飯パスポートロゴ" />'
+# ↑従来のサイズ(width=150, height=150) → 1.5倍 (225×225)
+logo_html = f'<img src="data:image/png;base64,{logo_base64}" width="225" height="225" alt="サ飯パスポートロゴ" />'
 
 # スタンプ風の透かし用画像（例: 同じロゴを使用）
 stamp_base64 = logo_base64
 
 st.markdown(f"""
 <style>
-    /* 全体のベースカラーをbodyおよびコンテナに適用 */
+    /* 全体のベースカラーとフォントをbodyおよびコンテナに適用 */
     body, .reportview-container, .stApp, .main {{
-        background-image: url("https://s.mj.run/qmlyfG-PEwY");
-        background-repeat: repeat;
-        color: #e8d0a9;
-        font-family: 'Noto Sans JP', sans-serif;
+        background-color: #f7e93f; /* ベースカラー黄色 */
+        /* background-image: url("https://s.mj.run/qmlyfG-PEwY"); */ /* 背景画像削除 */
+        /* background-repeat: repeat; */
+        color: #006dee; /* アクセントカラー青をデフォルトテキスト色に */
+        font-family: 'Noto Sans JP', sans-serif; /* 日本語フォント指定 */
+        font-weight: 700; /* 全体のフォントウェイトを太めに */
         overflow-x: hidden; /* 横スクロールを禁止 */
     }}
 
@@ -188,10 +190,10 @@ st.markdown(f"""
         box-sizing: border-box; /* padding/borderを幅に含める */
     }}
     
-    /* ヘッダー部分: 赤茶色系 */
+    /* ヘッダー部分: アクセントカラー */
     .passport-header {{
-        background-color: #7d2a14;
-        color: #e8d0a9;
+        background-color: #006dee; /* アクセントカラー青 */
+        color: #fff; /* サブアクセント白 */
         padding: 30px 20px;
         text-align: center;
         border-radius: 0;
@@ -204,26 +206,29 @@ st.markdown(f"""
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }}
     
-    /* タイトル(セリフ書体) */
+    /* タイトル(日本語) */
     .passport-title {{
-        font-family: "Hiragino Mincho ProN", "Times New Roman", serif;
+        /* font-family: "Hiragino Mincho ProN", "Times New Roman", serif; */
+        font-family: 'Noto Sans JP', serif; /* 日本語フォント指定 */
         font-size: 42px;
-        font-weight: bold;
+        font-weight: 700; /* 太字 */
         margin-bottom: 20px;
         letter-spacing: 2px;
-        color: #e8d0a9;
+        color: #f7e93f; /* ベースカラー黄色に変更 */
     }}
     
-    /* SAMESHI PASSPORT: 枠線付き、セリフ系 */
+    /* SAMESHI PASSPORT: 英語タイトル */
     .passport-en-title {{
-        font-family: "Times New Roman", serif;
+        /* font-family: "Times New Roman", serif; */
+        font-family: 'Montserrat', sans-serif; /* 英語フォント指定 */
         font-size: 20px;
         letter-spacing: 2px;
         display: inline-block;
         padding: 5px 10px;
-        border: 1px solid #e8d0a9;
+        border: 1px solid #006dee; /* アクセントカラー青に変更 */
         margin-top: 10px;
-        color: #e8d0a9;
+        color: #f7e93f; /* ベースカラー黄色に変更 */
+        font-weight: 700; /* 太字 */
     }}
     
     /* ロゴセンタリング */
@@ -237,17 +242,19 @@ st.markdown(f"""
     .selection-label {{
         font-size: 20px;
         margin-bottom: 10px;
-        color: #e8d0a9;
+        color: #006dee; /* アクセントカラー青 */
+        font-weight: 700; /* 太字 */
     }}
 
     /* セレクトボックス */
     .stSelectbox > div > div {{
-        background-color: #272731;
-        color: #e8d0a9;
-        border: 1px solid #e8d0a9;
+        background-color: #fff; /* サブアクセント白 */
+        color: #006dee; /* アクセントカラー青 */
+        border: 1px solid #006dee; /* アクセントカラー青 */
         border-radius: 0;
         padding: 12px 14px;
         font-size: 17px;
+        font-weight: 700; /* 太字 */
         line-height: 1.8;
         height: auto !important;
         overflow: visible !important;
@@ -255,75 +262,90 @@ st.markdown(f"""
         align-items: center;
     }}
 
-    /* ボタン(角丸なし、中央配置はHTML側でdiv包む) */
+    /* ボタン */
     .stButton > button {{
-        background-color: #7d2a14 !important;
-        color: #e8d0a9 !important;
-        font-weight: bold;
+        background-color: #006dee !important; /* アクセントカラー青 */
+        color: #fff !important; /* サブアクセント白 */
+        font-weight: 700 !important; /* 太字 */
         padding: 12px 40px;
         border-radius: 0 !important;
         border: none !important;
         font-size: 18px !important;
         margin-top: 15px;
         transition: all 0.3s;
+        font-family: 'Noto Sans JP', sans-serif; /* フォント指定 */
     }}
     .stButton > button:hover {{
-        background-color: #9e3418 !important;
-        box-shadow: 0 0 8px rgba(158, 52, 24, 0.3);
+        background-color: #0056b3 !important; /* 少し暗い青 */
+        box-shadow: 0 0 8px rgba(0, 109, 238, 0.3); /* 影の色調整 */
     }}
     
     /* カード全体のスタイル */
     .result-card {{
-        background-color: #272731;
-        border: 1px solid #e8d0a9;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        background-color: #fff; /* サブアクセント白 */
+        /* border: 1px solid #006dee; */ /* ボーダー削除 */
+        border-radius: 16px; /* 角丸を大きく */
+        padding: 18px; /* 20pxから15pxに変更 */
+        margin: 10px 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* ドロップシャドウ追加 */
     }}
     
     /* メニュー名スタイル */
     .menu-name {{
         font-size: 22px;
-        font-weight: bold;
-        color: #e8d0a9;
-        margin-top: 10px;
+        font-weight: 700; /* 太字 */
+        color: #006dee; /* アクセントカラー青 */
+        margin-top: 0; /* 上マージン削除 */
+        margin-bottom: 4px; /* 下マージン少し追加 */
     }}
     
     /* 料金スタイル */
     .price {{
         font-size: 18px;
-        color: #e8d0a9;
-        margin-top: 5px;
+        font-weight: 700; /* 太字 */
+        color: #006dee; /* アクセントカラー青 */
+        margin-top: 2px; /* 上マージン詰める */
+        margin-bottom: 2px; /* 下マージン詰める */
     }}
     
     /* 説明文スタイル */
     .description {{
         font-size: 16px;
-        color: #e8d0a9;
-        margin-top: 10px;
+        font-weight: 700; /* 太字 */
+        color: #006dee; /* アクセントカラー青 */
+        margin-top: 4px; /* 上マージン詰める */
+        margin-bottom: 2px; /* 下マージン詰める */
     }}
     
     /* タグスタイル */
     .tags {{
-        margin-top: 12px;
-        color: #7d2a14;
+        margin-top: 8px; /* 上マージン詰める */
+        /* color: #7d2a14; */ /* 親要素の色指定は不要 */
     }}
     
+    /* カード内区切り線 */
+    hr.card-separator {{
+        border: none;
+        height: 1px;
+        background-color: #eee; /* 薄いグレー */
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }}
+
     .tag {{
-        background-color: #e8d0a9;
-        color: #7d2a14;
+        background-color: #006dee; /* アクセントカラー青 */
+        color: #fff; /* サブアクセント白 */
         padding: 5px 10px;
         border-radius: 20px;
         display: inline-block;
         margin-right: 5px;
         font-size: 14px;
-        font-weight: bold;
+        font-weight: 700; /* 太字 */
     }}
     
     /* セパレーター */
     .separator {{
-        border-top: 1px solid #e8d0a9;
+        border-top: 1px solid #006dee; /* アクセントカラー青 */
         margin: 30px 0;
     }}
     
@@ -331,17 +353,19 @@ st.markdown(f"""
     .footer {{
         text-align: center;
         margin-top: 50px;
-        color: #aaaa99;
+        color: #006dee; /* アクセントカラー青 */
         font-size: 14px;
+        font-weight: 700; /* 太字 */
     }}
     
     /* 金額表示スタイル */
     .price-summary {{
-        background-color: #272731;
-        border: 1px solid #e8d0a9;
-        border-radius: 10px;
-        padding: 20px;
-        margin-top: 20px;
+        background-color: #fff; /* サブアクセント白 */
+        /* border: 1px solid #006dee; */ /* ボーダー削除 */
+        border-radius: 16px; /* 角丸を大きく */
+        padding: 18px; /* パディング調整 */
+        margin: 10px 0; /* マージン調整 */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* ドロップシャドウ追加 */
     }}
     
     /* スタンプ風透かし: */
@@ -362,14 +386,15 @@ st.markdown(f"""
         visibility: hidden;
     }}
 
-    .centered-icon img {{ /* ロゴサイズも調整 */
-        width: 150px;
-        height: 150px;
+    .centered-icon img {{ /* ロゴサイズ調整 */
+        width: 225px; /* 1.5倍 */
+        height: 225px; /* 1.5倍 */
     }}
     h2 {{ /* h2見出しの調整 */
         font-size: 24px; /* 少し小さくする */
         word-break: keep-all; /* 単語の途中での改行を防ぐ */
         line-height: 1.4; /* 行間も少し調整 */
+        font-weight: 700; /* 太字 */
     }}
 
     /* --- レスポンシブ対応 --- */
@@ -385,9 +410,9 @@ st.markdown(f"""
             padding: 20px 15px; /* ヘッダーのパディングも調整 */
             margin-top: -60px; /* 上マージン調整 */
         }}
-         .centered-icon img {{ /* ロゴサイズも調整 */
-            width: 150px;
-            height: 150px;
+         .centered-icon img {{ /* ロゴサイズ調整 (モバイル) */
+            width: 225px; /* 1.5倍 */
+            height: 225px; /* 1.5倍 */
         }}
     }}
 </style>
@@ -441,7 +466,7 @@ if st.session_state.selected_menus:
     lng = selected_sauna.get("longitude")
 
     st.markdown('<div class="separator"></div>', unsafe_allow_html=True)
-    st.markdown('<h2 style="color: #e8d0a9; text-align: center; margin-bottom: 20px;">サ飯ガチャ 結果</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 style="color: #006dee; text-align: center; margin-bottom: 20px;">サ飯ガチャ 結果</h2>', unsafe_allow_html=True)
 
     for menu in st.session_state.selected_menus:
         icon = category_icon.get(menu.get("category", "").lower(), "🍽️")
@@ -450,20 +475,22 @@ if st.session_state.selected_menus:
         if image_path and os.path.exists(image_path):
             with open(image_path, "rb") as img_file:
                 encoded = base64.b64encode(img_file.read()).decode()
-            image_html = f'<img src="data:image/jpeg;base64,{encoded}" style="width:150px; height:150px; object-fit: cover; border-radius:8px; margin-left:20px;" />'
+            # 画像スタイル変更: サイズ縮小、左寄せ、右マージン
+            image_html = f'<img src="data:image/jpeg;base64,{encoded}" style="width:80px; height:80px; object-fit: cover; border-radius:12px; margin-right:15px; flex-shrink: 0;" />'
         else:
             image_html = ""
         
         st.markdown(f"""
         <div class="result-card">
-            <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+            <div style="display: flex; align-items: flex-start;"> 
+                {image_html} 
                 <div style="flex: 1;">
                     <p class="menu-name">{icon} {menu['name']}</p>
+                    <hr class="card-separator"> 
                     <p class="price">￥{menu['price']}</p>
                     <p class="description">{menu['description']}</p>
                     <div class="tags">{tags_html}</div>
                 </div>
-                {image_html}
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -478,10 +505,10 @@ if st.session_state.selected_menus:
 
     st.markdown(f"""
     <div class="price-summary">
-        <h3 style="color: #e8d0a9; margin-bottom: 15px;">💰 合計金額</h3>
-        <p style="color: #e8d0a9; font-size: 16px;">サウナ入浴料: ￥{sauna_fee}</p>
-        <p style="color: #e8d0a9; font-size: 16px;">サウナ飯（{len(st.session_state.selected_menus)}品合計）: ￥{total_food_price}</p>
-        <p style="color: #e8d0a9; font-size: 20px; font-weight: bold; margin-top: 10px;">合計: ￥{total_price}</p>
+        <h3 style="color: #006dee; margin-bottom: 15px; font-weight: 700;">💰 合計金額</h3>
+        <p style="color: #006dee; font-size: 16px; font-weight: 700;">サウナ入浴料: ￥{sauna_fee}</p>
+        <p style="color: #006dee; font-size: 16px; font-weight: 700;">サウナ飯（{len(st.session_state.selected_menus)}品合計）: ￥{total_food_price}</p>
+        <p style="color: #006dee; font-size: 20px; font-weight: 700; margin-top: 10px;">合計: ￥{total_price}</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -494,7 +521,7 @@ if st.session_state.selected_menus:
     if lat and lng:
         nearby_foods = find_nearby_good_food(lat, lng)
         if nearby_foods:
-            st.markdown('<h2 style="color: #e8d0a9; text-align: center; margin-bottom: 20px;">徒歩圏内の高評価なサ飯処</h2>', unsafe_allow_html=True)
+            st.markdown('<h2 style="color: #006dee; text-align: center; margin-bottom: 20px;">徒歩圏内の高評価なサ飯処</h2>', unsafe_allow_html=True)
             # 地図表示
             map_data = pd.DataFrame(
                 [{
@@ -578,18 +605,20 @@ if st.session_state.selected_menus:
                 stars = "⭐" * int(round(store['rating']))
                 photo_base64 = get_photo_base64(store["photo_url"]) if store.get("photo_url") else None
                 if photo_base64:
-                    image_html = f'<img src="data:image/jpeg;base64,{photo_base64}" style="width:150px; height:150px; object-fit: cover; border-radius:8px; margin-left:20px;" />'
+                    # 画像スタイル変更: サイズ縮小、左寄せ、右マージン
+                    image_html = f'<img src="data:image/jpeg;base64,{photo_base64}" style="width:80px; height:80px; object-fit: cover; border-radius:12px; margin-right:15px; flex-shrink: 0;" />'
                 else:
-                    image_html = '<div style="width:150px; height:150px; background:#444; border-radius:8px; margin-left:20px;"></div>'
+                    # プレースホルダーのスタイルも変更
+                    image_html = '<div style="width:80px; height:80px; background:#eee; border-radius:12px; margin-right:15px; flex-shrink: 0;"></div>'
                 st.markdown(f"""
 <div class="result-card">
-    <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+    <div style="display: flex; align-items: flex-start;"> 
+        {image_html} 
         <div style="flex: 1;">
             <p class="menu-name">{emoji} {store['name']}（{store['keyword']}）</p>
             <p class="price">評価: {store['rating']} {stars}</p>
-            <a href="{store['maps_url']}" target="_blank" style="color:#e8d0a9;">Googleマップで見る</a>
+            <a href="{store['maps_url']}" target="_blank" style="color:#006dee;">Googleマップで見る</a>
         </div>
-        {image_html}
     </div>
 </div>
 """, unsafe_allow_html=True)
