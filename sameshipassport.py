@@ -159,12 +159,17 @@ with open("sameshi_logo02.png", "rb") as f:
     logo_data = f.read()
 logo_base64 = base64.b64encode(logo_data).decode()
 
+# 透かし用のロゴ
+with open("sameshi_logo_sukashi.png", "rb") as f:
+    stamp_data = f.read()
+stamp_base64 = base64.b64encode(stamp_data).decode()
+
 # メインロゴHTML
 # ↑従来のサイズ(width=150, height=150) → 1.5倍 (225×225)
 logo_html = f'<img src="data:image/png;base64,{logo_base64}" width="225" height="225" alt="サ飯パスポートロゴ" />'
 
-# スタンプ風の透かし用画像（例: 同じロゴを使用）
-stamp_base64 = logo_base64
+# スタンプ風の透かし用画像
+# stamp_base64 = logo_base64 # 同じロゴを使用しない
 
 st.markdown(f"""
 <style>
@@ -360,6 +365,11 @@ st.markdown(f"""
     
     /* 金額表示スタイル */
     .price-summary {{
+        max-width: 700px;
+        margin: 10px auto !important;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
         background-color: #fff; /* サブアクセント白 */
         /* border: 1px solid #006dee; */ /* ボーダー削除 */
         border-radius: 16px; /* 角丸を大きく */
@@ -413,6 +423,12 @@ st.markdown(f"""
          .centered-icon img {{ /* ロゴサイズ調整 (モバイル) */
             width: 225px; /* 1.5倍 */
             height: 225px; /* 1.5倍 */
+        }}
+        /* モバイル用のh2見出し調整 */
+        h2 {{
+            font-size: 20px !important;
+            line-height: 1.2 !important;
+            word-wrap: break-word !important;
         }}
     }}
 </style>
@@ -485,7 +501,7 @@ if st.session_state.selected_menus:
             <div style="display: flex; align-items: flex-start;"> 
                 {image_html} 
                 <div style="flex: 1;">
-                    <p class="menu-name">{icon} {menu['name']}</p>
+                    <p class="menu-name">{menu['name']}</p>
                     <hr class="card-separator"> 
                     <p class="price">￥{menu['price']}</p>
                     <p class="description">{menu['description']}</p>
@@ -505,10 +521,15 @@ if st.session_state.selected_menus:
 
     st.markdown(f"""
     <div class="price-summary">
-        <h3 style="color: #006dee; margin-bottom: 15px; font-weight: 700;">💰 合計金額</h3>
-        <p style="color: #006dee; font-size: 16px; font-weight: 700;">サウナ入浴料: ￥{sauna_fee}</p>
-        <p style="color: #006dee; font-size: 16px; font-weight: 700;">サウナ飯（{len(st.session_state.selected_menus)}品合計）: ￥{total_food_price}</p>
-        <p style="color: #006dee; font-size: 20px; font-weight: 700; margin-top: 10px;">合計: ￥{total_price}</p>
+        <div style="flex: 1; margin-right: 20px;">
+            <h3 style="color: #006dee; margin: 0 0 10px 0; font-weight: 700;">合計金額</h3>
+            <p style="color: #006dee; font-size: 16px; font-weight: 700; margin: 0 0 5px 0;">サウナ入浴料: ￥{sauna_fee}</p>
+            <p style="color: #006dee; font-size: 16px; font-weight: 700; margin: 0;">サウナ飯（{len(st.session_state.selected_menus)}品合計）: ￥{total_food_price}</p>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+            <p style="color: #006dee; font-size: 16px; font-weight: 700; margin: 0; line-height: 1;">合計:</p>
+            <p style="color: #006dee; font-size: 40px; font-weight: 700; margin: 0; line-height: 1;">￥{total_price}</p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -521,7 +542,8 @@ if st.session_state.selected_menus:
     if lat and lng:
         nearby_foods = find_nearby_good_food(lat, lng)
         if nearby_foods:
-            st.markdown('<h2 style="color: #006dee; text-align: center; margin-bottom: 20px;">徒歩圏内の高評価なサ飯処</h2>', unsafe_allow_html=True)
+            # 見出しのテキストを短くしてスタイルを調整
+            st.markdown('<h2 style="color: #006dee; text-align: center; margin-bottom: 20px; font-size: 22px; word-wrap: break-word; word-break: keep-all; line-height: 1.3;">徒歩圏内の高評価なサ飯処</h2>', unsafe_allow_html=True)
             # 地図表示
             map_data = pd.DataFrame(
                 [{
@@ -615,7 +637,7 @@ if st.session_state.selected_menus:
     <div style="display: flex; align-items: flex-start;"> 
         {image_html} 
         <div style="flex: 1;">
-            <p class="menu-name">{emoji} {store['name']}（{store['keyword']}）</p>
+            <p class="menu-name">{store['name']}（{store['keyword']}）</p>
             <p class="price">評価: {store['rating']} {stars}</p>
             <a href="{store['maps_url']}" target="_blank" style="color:#006dee;">Googleマップで見る</a>
         </div>
