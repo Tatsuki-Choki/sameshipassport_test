@@ -603,9 +603,9 @@ if st.session_state.selected_menus:
             layer = pdk.Layer(
                 "IconLayer",
                 data=map_data,
-            get_icon="icon_data",
-            get_size=3,
-            size_scale=12,
+                get_icon="icon_data",
+                get_size=3,
+                size_scale=12,
                 get_position='[lon, lat]',
                 pickable=True
             )
