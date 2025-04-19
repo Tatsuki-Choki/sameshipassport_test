@@ -10,6 +10,7 @@ import base64
 import googlemaps
 ## from dotenv import load_dotenv  # Removed .env loading
 import pydeck as pdk
+import streamlit.components.v1 as components
 ## load_dotenv()
 ## gmaps = googlemaps.Client(key=os.getenv("GOOGLE_API_KEY"))
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
@@ -545,78 +546,62 @@ if st.session_state.selected_menus:
         if nearby_foods:
             # 見出しのテキストを短くしてスタイルを調整
             st.markdown('<h2 style="color: #006dee; text-align: center; margin-bottom: 20px; font-size: 22px; word-wrap: break-word; word-break: keep-all; line-height: 1.3;">徒歩圏内の高評価なサ飯処</h2>', unsafe_allow_html=True)
-            # 地図表示
-            map_data = pd.DataFrame(
-                [{
-                    'lat': lat,
-                    'lon': lng,
-                    'name': 'サウナ',
-                    'type': 'サウナ',
-                    'rating': None,
-                    'color': [0, 128, 255]
-                }] +
-                [{
-                    'lat': place['latitude'],
-                    'lon': place['longitude'],
-                    'name': place['name'],
-                    'type': place['keyword'],
-                    'rating': place['rating'],
-                    'color': [255, 0, 80]
-                } for place in nearby_foods]
-            )
-            map_data['rating'] = map_data['rating'].fillna(0)
-
-            # 絵文字マッピング（ローカル画像パス）
+            # Google Maps 埋め込み
+            # キーワードごとの絵文字アイコンマップ
             icon_map = {
-                "サウナ": "images/pin_sauna.png",
-                "カレー": "images/pin_curry.png",
-                "ラーメン": "images/pin_ramen.png",
-                "牛丼": "images/pin_gyudon.png",
-                "ハンバーガー": "images/pin_burger.png"
+                "ラーメン": "🍜",
+                "牛丼": "🍚",
+                "カレー": "🍛",
+                "ハンバーガー": "🍔"
             }
             
-            # フォールバックアイコン（URLアイコンでも可）
-            default_icon_url = "https://cdn-icons-png.flaticon.com/512/684/684908.png"
+            # 各マーカー用の JS コード生成
+            markers_js = f"""
+              var saunaMarker = new google.maps.Marker({{
+                  position: {{lat: {lat}, lng: {lng}}},
+                  map: map,
+                  icon: {{ url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png" }},
+                  title: "{selected_sauna_name}"
+              }});
+              saunaMarker.addListener('click', function() {{
+                  window.open("https://www.google.com/maps/search/?api=1&query={lat},{lng}", "_blank");
+              }});
+            """
+            for p in nearby_foods:
+                icon = icon_map.get(p["keyword"], "")
+                markers_js += f"""
+              var marker = new google.maps.Marker({{
+                  position: {{lat: {p['latitude']}, lng: {p['longitude']}}},
+                  map: map,
+                  label: {{ text: "{icon}", fontSize: "24px" }},
+                  title: "{p['name']}"
+              }});
+              marker.addListener('click', function() {{
+                  window.open("{p['maps_url']}", "_blank");
+              }});
+            """
+              
+            map_html = f'''
+              <div id="map" style="height:450px; width:100%;"></div>
+              <script src="https://maps.googleapis.com/maps/api/js?key={st.secrets['env']['GOOGLE_API_KEY']}&language=ja"></script>
+              <script>
+                function initMap() {{
+                  var center = {{lat: {lat}, lng: {lng}}};
+                  var map = new google.maps.Map(document.getElementById('map'), {{
+                    zoom: 16,
+                    center: center,
+                    mapTypeControl: false,
+                    styles: [
+                        {{ stylers: [ {{ saturation: -100 }}, {{ lightness: 50 }} ] }}
+                    ]
+                  }});
+                  {markers_js}
+                }}
+                google.maps.event.addDomListener(window, 'load', initMap);
+              </script>
+              '''
+            components.html(map_html, height=480)
             
-            # ローカル画像をbase64エンコードして使用する関数
-            def get_icon_data(entry):
-                icon_path = icon_map.get(entry['type'], default_icon_url)
-                if os.path.exists(icon_path):
-                    with open(icon_path, "rb") as f:
-                        image_data = base64.b64encode(f.read()).decode()
-                    return {
-                        "url": f"data:image/png;base64,{image_data}",
-                    "width": 36,
-                    "height": 36,
-                    "anchorY": 40
-                    }
-                else:
-                    return {
-                        "url": default_icon_url,
-                    "width": 36,
-                    "height": 36,
-                    "anchorY": 40
-                    }
-            
-            map_data["icon_data"] = map_data.apply(get_icon_data, axis=1)
-            
-            layer = pdk.Layer(
-                "IconLayer",
-                data=map_data,
-                get_icon="icon_data",
-                get_size=3,
-                size_scale=12,
-                get_position='[lon, lat]',
-                pickable=True
-            )
-
-            tooltip = {
-                "html": "<b>{name}</b><br>{type}<br>評価: {rating}",
-                "style": {"backgroundColor": "white", "color": "black"}
-            }
-
-            view_state = pdk.ViewState(latitude=lat, longitude=lng, zoom=16)
-            st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip=tooltip, map_style="mapbox://styles/mapbox/light-v9"))
             # 距離が短い順にソート
             nearby_foods = sorted(nearby_foods, key=lambda x: x['distance'])
             for store in nearby_foods:

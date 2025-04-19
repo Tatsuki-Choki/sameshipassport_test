@@ -6,3 +6,5 @@ python-dotenv
 googlemaps
 pydeck
 requests
+folium
+streamlit-folium
