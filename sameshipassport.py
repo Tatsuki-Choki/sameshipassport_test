@@ -103,6 +103,7 @@ def find_nearby_good_food(lat, lng, radius=200):
                     "keyword": keyword,
                     "latitude": place_lat,
                     "longitude": place_lng,
+                    "distance": int(distance),
                 "maps_url": f"https://www.google.com/maps/search/?api=1&query={place_lat},{place_lng}",
                     "photo_url": photo_url
                 })
@@ -527,7 +528,7 @@ if st.session_state.selected_menus:
             <p style="color: #006dee; font-size: 16px; font-weight: 700; margin: 0;">サウナ飯（{len(st.session_state.selected_menus)}品合計）: ￥{total_food_price}</p>
         </div>
         <div style="display: flex; flex-direction: column; align-items: flex-start;">
-            <p style="color: #006dee; font-size: 16px; font-weight: 700; margin: 0; line-height: 1;">合計:</p>
+            <p style="color: #006dee; font-size: 16px; font-weight: 700; margin: 0; line-height: 1;"></p>
             <p style="color: #006dee; font-size: 40px; font-weight: 700; margin: 0; line-height: 1;">￥{total_price}</p>
         </div>
     </div>
@@ -616,14 +617,9 @@ if st.session_state.selected_menus:
 
             view_state = pdk.ViewState(latitude=lat, longitude=lng, zoom=16)
             st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip=tooltip, map_style="mapbox://styles/mapbox/light-v9"))
-            emoji_map = {
-                "ラーメン": "🍜",
-                "カレー": "🍛",
-                "牛丼": "🥩",
-                "ハンバーガー": "🍔"
-            }
+            # 距離が短い順にソート
+            nearby_foods = sorted(nearby_foods, key=lambda x: x['distance'])
             for store in nearby_foods:
-                emoji = emoji_map.get(store['keyword'], "🍴")
                 stars = "⭐" * int(round(store['rating']))
                 photo_base64 = get_photo_base64(store["photo_url"]) if store.get("photo_url") else None
                 if photo_base64:
@@ -639,6 +635,7 @@ if st.session_state.selected_menus:
         <div style="flex: 1;">
             <p class="menu-name">{store['name']}（{store['keyword']}）</p>
             <p class="price">評価: {store['rating']} {stars}</p>
+            <p class="description">距離: 約{store['distance']}m</p>
             <a href="{store['maps_url']}" target="_blank" style="color:#006dee;">Googleマップで見る</a>
         </div>
     </div>
