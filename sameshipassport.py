@@ -554,6 +554,7 @@ if st.session_state.selected_menus:
                 "カレー": "🍛",
                 "ハンバーガー": "🍔"
             }
+            
             # 各マーカー用の JS コード生成
             markers_js = f"""
               var saunaMarker = new google.maps.Marker({{
@@ -600,6 +601,7 @@ if st.session_state.selected_menus:
               </script>
               '''
             components.html(map_html, height=480)
+            
             # 距離が短い順にソート
             nearby_foods = sorted(nearby_foods, key=lambda x: x['distance'])
             for store in nearby_foods:
