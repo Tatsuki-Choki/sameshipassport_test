@@ -585,15 +585,15 @@ if st.session_state.selected_menus:
                         image_data = base64.b64encode(f.read()).decode()
                     return {
                         "url": f"data:image/png;base64,{image_data}",
-                    "width": 40,
-                    "height": 40,
+                    "width": 36,
+                    "height": 36,
                     "anchorY": 40
                     }
                 else:
                     return {
                         "url": default_icon_url,
-                    "width": 40,
-                    "height": 40,
+                    "width": 36,
+                    "height": 36,
                     "anchorY": 40
                     }
             
@@ -603,8 +603,8 @@ if st.session_state.selected_menus:
                 "IconLayer",
                 data=map_data,
                 get_icon="icon_data",
-                get_size=4,
-                size_scale=15,
+                get_size=3,
+                size_scale=12,
                 get_position='[lon, lat]',
                 pickable=True
             )
