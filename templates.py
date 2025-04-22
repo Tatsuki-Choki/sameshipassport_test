@@ -8,15 +8,65 @@ def get_image_base64(image_path):
             return base64.b64encode(img_file.read()).decode()
     return None
 
+def get_mobile_select_fix_js():
+    """モバイル端末でセレクトボックスのキーボードを表示させないためのJavaScript"""
+    return """
+    <script>
+    // モバイル端末かどうかを検出
+    function isMobileDevice() {
+        return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    }
+    
+    // ドキュメントの読み込みが完了した後に実行
+    document.addEventListener("DOMContentLoaded", function() {
+        // 一定間隔で実行してDOMの変更を監視
+        const interval = setInterval(function() {
+            // セレクトボックスのテキスト入力要素を見つける
+            const selectInputs = document.querySelectorAll('.stSelectbox input, div[role="combobox"] input');
+            
+            if (selectInputs.length > 0) {
+                selectInputs.forEach(function(input) {
+                    // readonlyとaria-readonlyを設定してテキスト入力を禁止
+                    input.setAttribute('readonly', 'readonly');
+                    input.setAttribute('aria-readonly', 'true');
+                    
+                    // モバイル端末の場合、追加の属性を設定
+                    if (isMobileDevice()) {
+                        // キーボードを表示させない
+                        input.setAttribute('inputmode', 'none');
+                        
+                        // フォーカス時のイベント
+                        input.addEventListener('focus', function(e) {
+                            // フォーカスを外して再度当てる（キーボード表示を防止）
+                            input.blur();
+                            setTimeout(function() {
+                                input.focus();
+                            }, 10);
+                        });
+                    }
+                });
+                
+                // セレクトボックスが見つかったらintervalを解除
+                // clearInterval(interval);
+            }
+        }, 500); // 500msごとに実行
+    });
+    </script>
+    """
+
 def get_header_html(logo_html):
     """ヘッダー部分のHTMLを返す"""
     # applogo.pngをbase64エンコード
     app_logo_base64 = get_image_base64("images/applogo.png")
-    app_logo_html = f'<img src="data:image/png;base64,{app_logo_base64}" alt="サ飯パスポート" style="max-width:80%; height:auto;" />'
+    app_logo_html = f'<img src="data:image/png;base64,{app_logo_base64}" alt="サ飯パスポート" style="max-width:50%; height:auto;" />'
     
     return f"""
     <div class="passport-header">
         <div class="passport-title" style="margin-bottom:0px;">{app_logo_html}</div>
+        <div class="centered-icon" style="margin-bottom:0px;">
+            {logo_html}
+        </div>
+        <div class="passport-en-title">SAMESHI PASSPORT</div>
     </div>
     """
 
