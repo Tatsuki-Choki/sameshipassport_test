@@ -78,20 +78,29 @@ CUSTOM_CSS = """
         font-weight: 700; /* 太字 */
     }
 
-    /* セレクトボックス */
+    /* セレクトボックス - 縦サイズ70%に縮小 */
     .stSelectbox > div > div {
         background-color: #fff; /* サブアクセント白 */
         color: #006dee; /* アクセントカラー青 */
         border: 1px solid #006dee; /* アクセントカラー青 */
         border-radius: 0;
-        padding: 12px 14px;
+        padding: 8px 14px; /* 縦方向のパディングを小さく */
         font-size: 17px;
         font-weight: 700; /* 太字 */
-        line-height: 1.8;
+        line-height: 1.3; /* 行間を縮小 */
         height: auto !important;
         overflow: visible !important;
         display: flex;
         align-items: center;
+        min-height: 42px; /* 最小高さを設定 */
+    }
+    
+    /* セレクトボックスドロップダウンを下側に表示 */
+    .stSelectbox > div[data-baseweb="popover"] {
+        position: absolute !important;
+        top: 100% !important; /* 必ず下側に表示 */
+        margin-top: 0 !important;
+        z-index: 100;
     }
 
     /* ボタン */
@@ -257,11 +266,26 @@ CUSTOM_CSS = """
             line-height: 1.2 !important;
             word-wrap: break-word !important;
         }
+        
+        /* スマホ表示時のセレクトボックス調整 */
+        .stSelectbox > div > div {
+            padding: 6px 10px; /* さらにコンパクトに */
+            min-height: 38px;
+        }
+        
+        /* スマホ表示時のドロップダウン位置調整 */
+        .stSelectbox div[role="listbox"] {
+            top: 100% !important;
+            bottom: auto !important;
+            position: absolute !important;
+            margin-top: 5px !important;
+        }
     }
-      /* タイトルロゴセンタリング */
-      .centered-title-logo {
-          text-align: center;
-          margin-bottom: 0px;
-      }
+    
+    /* タイトルロゴセンタリング */
+    .centered-title-logo {
+        text-align: center;
+        margin-bottom: 0px;
+    }
 </style>
 """ 
