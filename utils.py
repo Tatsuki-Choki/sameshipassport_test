@@ -51,6 +51,7 @@ def find_nearby_good_food(lat, lng, radius=200):
                     "keyword": keyword,
                     "latitude": place_lat,
                     "longitude": place_lng,
+                    "distance": int(distance),
                     "maps_url": f"https://www.google.com/maps/search/?api=1&query={place_lat},{place_lng}",
                     "photo_url": photo_url
                 })
