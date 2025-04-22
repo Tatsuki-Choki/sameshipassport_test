@@ -1,8 +1,22 @@
+import base64
+import os
+
+def get_image_base64(image_path):
+    """画像ファイルを読み込んでbase64エンコードした文字列を返す"""
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return None
+
 def get_header_html(logo_html):
     """ヘッダー部分のHTMLを返す"""
+    # applogo.pngをbase64エンコード
+    app_logo_base64 = get_image_base64("images/applogo.png")
+    app_logo_html = f'<img src="data:image/png;base64,{app_logo_base64}" alt="サ飯パスポート" style="max-width:100%; height:auto;" />'
+    
     return f"""
     <div class="passport-header">
-        <h1 class="passport-title">サ飯パスポート</h1>
+        <div class="passport-title">{app_logo_html}</div>
         <div class="centered-icon">
             {logo_html}
         </div>
