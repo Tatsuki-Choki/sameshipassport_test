@@ -95,6 +95,23 @@ CUSTOM_CSS = """
         min-height: 42px; /* 最小高さを設定 */
     }
     
+    /* モバイルでのキーボード非表示のための設定 */
+    .stSelectbox input, div[role="combobox"] input {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        pointer-events: none !important; /* タッチイベントを無効化 */
+    }
+    
+    /* セレクトボックスのクリック範囲を広げる */
+    .stSelectbox > div {
+        cursor: pointer !important;
+    }
+    
     /* セレクトボックスドロップダウンを下側に表示 */
     .stSelectbox > div[data-baseweb="popover"] {
         position: absolute !important;

@@ -78,6 +78,9 @@ logo_html = f'<img src="data:image/png;base64,{logo_base64}" width="225" height=
 # スタイル定義を styles.py から取得
 st.markdown(styles.CUSTOM_CSS, unsafe_allow_html=True)
 
+# モバイル端末向けのセレクトボックス修正JavaScriptを適用
+st.markdown(templates.get_mobile_select_fix_js(), unsafe_allow_html=True)
+
 # 透かし用のHTML
 stamp_html = templates.get_stamp_watermark_html(stamp_base64)
 
