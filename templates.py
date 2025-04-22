@@ -12,7 +12,7 @@ def get_header_html(logo_html):
     """ヘッダー部分のHTMLを返す"""
     # applogo.pngをbase64エンコード
     app_logo_base64 = get_image_base64("images/applogo.png")
-    app_logo_html = f'<img src="data:image/png;base64,{app_logo_base64}" alt="サ飯パスポート" style="max-width:50%; height:auto;" />'
+    app_logo_html = f'<img src="data:image/png;base64,{app_logo_base64}" alt="サ飯パスポート" style="max-width:80%; height:auto;" />'
     
     return f"""
     <div class="passport-header">
