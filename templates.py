@@ -63,10 +63,6 @@ def get_header_html(logo_html):
     return f"""
     <div class="passport-header">
         <div class="passport-title" style="margin-bottom:0px;">{app_logo_html}</div>
-        <div class="centered-icon" style="margin-bottom:0px;">
-            {logo_html}
-        </div>
-        <div class="passport-en-title">SAMESHI PASSPORT</div>
     </div>
     """
 
